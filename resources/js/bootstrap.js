@@ -8,7 +8,7 @@ window._ = require('lodash');
  */
 
 try {
-    window.Popper = require('popper.js').default;
+    //window.Popper = require('popper.js').default;
     //window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
@@ -37,15 +37,6 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-/*import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import App from './App.vue';
-Vue.use(ElementUI);
-new Vue({
-    el: '#app',
-    render: h => h(App)
-  });*/
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

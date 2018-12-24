@@ -5,7 +5,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+//require('./bootstrap');
 
 window.Vue = require('vue');
 
@@ -22,8 +22,22 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
-Vue.component('welcome', require('./components/Welcome.vue'));
+//Vue.component('welcome', require('./components/Welcome.vue'));
+//import Vue from 'vue'
+//import VueRouter from 'vue-router';
+//import App from './App.vue'
+/*import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import App from './App.vue';
+Vue.use(ElementUI);
+new Vue({
+    el: '#app',
+    render: h => h(App)
+  });*/
 
+ 
+//Vue.use(VueRouter);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -33,6 +47,6 @@ Vue.component('welcome', require('./components/Welcome.vue'));
 const app = new Vue({
     el: '#app',
     data:{
-        menu:0
+        menu: 0
     }
 });
