@@ -101,7 +101,7 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="nombre" name="nombre" class="form-control" placeholder="Nombre de categoría">
-                                        <span class="help-block">(*) Ingrese el nombre de la categoría</span>
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -110,12 +110,19 @@
                                         <input type="email" v-model="descripcion" name="descripcion" class="form-control" placeholder="Ingrese Descripcion">
                                     </div>
                                 </div>
+                                <div v-show="error_categoria" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in error_arreglo_msn" :key="error" v-text="error">
+
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                             <button type="button" v-if="tipo_accion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipo_accion==2" class="btn btn-primary">Actualizar</button>
+                            <button type="button" v-if="tipo_accion==2" class="btn btn-primary" @click="actualizarCategoria()" >Actualizar</button>
 
                         </div>
                     </div>
@@ -163,7 +170,10 @@
                 arreglo_categoria:[],
                 modal: false,
                 titulo_modal :'',
-                tipo_accion : 0
+                tipo_accion : 0,
+                error_categoria : false,
+                error_arreglo_msn :[],
+                categoria_id : 0
             }
         },
         methods: {
@@ -171,7 +181,7 @@
                 let este = this;
                 axios.get('/categoria').then(function (response) {
                     // handle success
-                    console.log(response);
+                    //console.log(response)
                     este.arreglo_categoria = response.data
                 })
                 .catch(function (error) {
@@ -181,10 +191,34 @@
                 
             },
             registrarCategoria(){
+                if (this.validarCategoria()) {
+                    return;
+                }
                 let me = this;
                 axios.post('/categoria/registrar', {
                     'nombre' : this.nombre,
                     'descripcion' : this.descripcion
+                })
+                .then(function (response) {
+                    me.cerrarModal();
+                    me.listarCategoria();
+                    
+                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+            },
+            actualizarCategoria(){
+                if (this.validarCategoria()) {
+                    return;
+                }
+                let me = this;
+                axios.put('/categoria/actualizar', {
+                    'nombre' : this.nombre,
+                    'descripcion' : this.descripcion,
+                    'id' : this.categoria_id
                 })
                 .then(function (response) {
                     me.cerrarModal();
@@ -212,7 +246,13 @@
                                     break;
                                 }
                             case 'actualizar':
-                                {
+                                {   
+                                    this.modal = true;
+                                    this.titulo_modal = 'Actualizar Categoria';
+                                    this.tipo_accion = 2;
+                                    this.nombre = data['nombre'];
+                                    this.descripcion = data['descripcion'];
+                                    this.categoria_id = data['id'];
                                     break;
                                 }
                             
@@ -230,6 +270,15 @@
                 this.titulo_modal = '';
                 this.nombre = '';
                 this.descripcion ='';
+            },
+            validarCategoria(){
+                this.error_categoria = false
+                this.error_arreglo_msn = []
+                if (!this.nombre) {
+                    this.error_arreglo_msn.push("El nombre de la categoria no puede estar vacio")
+                }
+                if (this.error_arreglo_msn.length) this.error_categoria = true;
+                return this.error_categoria; 
             }
         },
         
@@ -245,5 +294,13 @@
     opacity: 1 !important;
     position: absolute !important;
     background-color: #3c29297a !important;
+}
+.div-error{
+    display: flex;
+    justify-content: center;
+}
+.text-error{
+    color: red !important;
+    font-weight: bold;
 }
 </style>
